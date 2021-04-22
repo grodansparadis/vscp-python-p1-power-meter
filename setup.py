@@ -18,7 +18,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='mqtt-python-p1-power-meter',
+    name='pyvscp-p1-power-meter',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -29,7 +29,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
 
-    url="ithub.com/grodansparadis/vscp-python-p1-power-meter",
+    url="https://github.com/grodansparadis/vscp-python-p1-power-meter",
 
     # Author details
     author='Ake Hedman, Grodans Paradis AB',
