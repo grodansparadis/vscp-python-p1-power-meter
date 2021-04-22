@@ -18,7 +18,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='pyvscp-p1-power-meter',
+    name='mqtt-python-p1-power-meter',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -71,7 +71,7 @@ setup(
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     #packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    py_modules=["pyserial"],
+    py_modules=[],
 
     python_requires='>=3.0',
 
@@ -113,19 +113,10 @@ setup(
     # need to place data files outside of your packages. See:
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files # noqa
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
-    data_files=[('pyvscp-p1-power-meter-sample-config', ['config.ini'])],
+    data_files=[('vscp-python-p1-power-meter-sample-config', ['config.ini'])],
 
     # Scripts that will be made available
-    scripts=['mqtt-p1.py'],
-
-    # To provide executable scripts, use entry points in preference to the
-    # "scripts" keyword. Entry points provide cross-platform support and allow
-    # pip to create the appropriate form of executable for the target platform.
-    #entry_points={
-    #    'console_scripts': [
-    #        'mqtt-bme680=pyvscp-p1-power-meter.mqtt-bme680:main',
-    #    ],
-    #},
+    scripts=['mqtt-p1-power-meter.py'],
 
 
 )
