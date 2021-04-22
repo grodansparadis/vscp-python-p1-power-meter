@@ -4,25 +4,21 @@
 
 <img src="https://vscp.org/images/logo.png" width="100">
 
-This project consist of a scripts to deliver data from a [BME680](https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors-bme680/) sensor to a MQTT broker (mqtt-bme680.py). It is built upon the [Adafruit BME680 module](https://github.com/adafruit/Adafruit_CircuitPython_BME680)
+**WARNING! This is work in progress**
+
+This project consist of a scripts to deliver data from a smart electrical meter with p1 interface. It has currently only been tested with Sagemcom T211
 
 It will deliver VSCP events for
 
-* Temperature
-* Humidity
-* Pressure (raw reading)
-* Pressure (adjusted for sea level)
-* Altitude
-* Gas concentration
-* Dew point
+* Used energy in/out (active and reactive),
+* Active and reactive effect (in/out).
+* Active and reactive effect for each phase (in/out).
+* Voltage for each phase.
+* Current for each phase.
+* Phasefactor for each phase.
 
 Typically the scripts is used in a [cron job](https://ostechnix.com/a-beginners-guide-to-cron-jobs/) to deliver the events on timed intervals.
 
-Adafruit is the most popular source for [BME680 breakout boards](https://www.adafruit.com/product/3660) but there are many others available also in different price ranges.
-
-![BME680](https://cdn-learn.adafruit.com/guides/cropped_images/000/001/822/medium640/3660_top_ORIG_2020_07.jpg?1596135784)
-
-The scripts can be configured to be used with either a SPI or I2C connected sensor.
 
 ## Install/connect the sensor
 
