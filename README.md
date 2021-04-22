@@ -4,7 +4,6 @@
 
 <img src="https://vscp.org/images/logo.png" width="100">
 
-**WARNING! This is work in progress**
 
 This project consist of a scripts to deliver data from a smart electrical meter with p1 interface. It has currently only been tested with Sagemcom T211
 
@@ -17,12 +16,8 @@ It will deliver VSCP events for
 * Current for each phase.
 * Phasefactor for each phase.
 
-Typically the scripts is used in a [cron job](https://ostechnix.com/a-beginners-guide-to-cron-jobs/) to deliver the events on timed intervals.
+Typically the scripts is used in a [cron job](https://ostechnix.com/a-beginners-guide-to-cron-jobs/) to deliver the events on timed intervals or is run in and endless loop.
 
-
-## Install/connect the sensor
-
-Lady Ada has written a very good tutorial on this [here](https://learn.adafruit.com/adafruit-bme680-humidity-temperature-barometic-pressure-voc-gas). Follow it to install your sensor.
 
 ## Install
 
@@ -47,18 +42,18 @@ Note that there may be [later versions available)(https://github.com/grodanspara
 
 ### Install the package
 
-The scripts are available as a package **vscp-python-sensor-bme680** on [PyPi](https://pypi.org/project/pyvscp-sensors-bme680/). This means you can do an automatic install with pip that will handle all dependencies expect for the helper library mentioned above which must be install manually.
+The scripts are available as a package **vscp-python-p1-power-meter** on [PyPi](https://pypi.org/project/vscp-python-p1-power-meter/). This means you can do an automatic install with pip that will handle all dependencies expect for the helper library mentioned above which must be install manually.
 
 The installation process is easy
 
 ```bash
-pip3 install vscp-python-sensor-bme680
+pip3 install vscp-python-p1-power-meter
 ```
 
 To later upgrade to the latest version use
 
 ```bash
-pip3 install --upgrade vscp-python-sensor-bme680
+pip3 install --upgrade vscp-python-p1-power-meter
 ```
 
 It is not required but recommended to install in a virtual environment To install in a virtual environment in your current project:
@@ -69,13 +64,13 @@ python3 -m venv .env
 source .env/bin/activate
 ```
 
-then do the install of **vscp-python-sensor-bme680** as of above.
+then do the install of **vscp-python-p1-power-meter** as of above.
 
-After install you can use **vscp-bme680.py** from the command line. Info on how to configure the scripts for your needs are below.
+After install you can use **mqtt-p1-power-meter.py** from the command line. Info on how to configure the scripts for your needs are below.
 
 ### Manual Install
 
-For some reason you may not want to use PyPi and want to download the scripts from the [github repository](https://github.com/grodansparadis/vscp-python-sensor-bme680). 
+For some reason you may not want to use PyPi and want to download the scripts from the [github repository](https://github.com/grodansparadis/vscp-python-p1-power-meter). 
 
 The script depends on some other modules that you need to install before using it. It is recommended to install everything in a virtual environment.
 
@@ -84,8 +79,8 @@ As mentioned above you need to install the VSCP helper library before installing
 It is recommended to install in a virtual environment in your current project:
 
 ```bash
-git clone https://github.com/grodansparadis/vscp-python-sensor-bme680.git
-cd vscp-python-sensor-bme680
+git clone https://github.com/grodansparadis/vscp-python-p1-power-meter.git
+cd vscp-python-p1-power-meter
 python3 -m venv .env
 source .env/bin/activate
 ```
@@ -103,19 +98,6 @@ Configparser can be found on [PyPi](https://pypi.org/) and is documented [https:
 
 ```bash
 pip3 install configparser
-```
-
-#### Install adafruit-circuitpython-bme680 module
-On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally from PyPI. To install for current user:
-
-```bash
-pip3 install adafruit-circuitpython-bme680
-```
-
-To install system-wide (this may be required in some cases):
-
-```bash
-sudo pip3 install adafruit-circuitpython-bme680
 ```
 
 #### Install VSCP modules
@@ -146,7 +128,7 @@ The settings are named the same in the config file as in the script itself so th
 To get help you can issue
 
 ```bash
-mqtt-bme680.py --help
+mqtt-p1-power-meter.py --help
 ```
 
 on the command line after the module is installed.
@@ -154,26 +136,26 @@ on the command line after the module is installed.
 The recommended way to configure the scripts is to use a configuration file and store this file in a safe location as it contains usernames and password and in that way can protect this sensitive information. The syntax to instruct the script to read a configuration file is
 
 ```bash
-mqtt-bme680.py --configure path-to-config-file
+mqtt-p1-power-meter.py --configure path-to-config-file
 ```
 
 So 
 
 ```bash
-mqtt-bme680.py --configure /etc/vscp/bme680-config.ini
+mqtt-p1-power-meter.py --configure ./config.ini
 ```
 
-will read the configuration from _/etc/vscp/bme680-config.ini_
+will read the configuration from _./config.ini_
 
 ## Sample configuration file
 
 If you install in a virtual environment as recommended above you will find a sample configuration file in 
 
->_.env/pyvscp-sensors-bme680-samp
+>_.env/p1-power-meter-samp
 
 For a standard install you find it in
 
->_.local/pyvscp-sensors-bme680-samp
+>_.local/p1-power-meter-samp
 
 and for a global install you can get the path by issuing
 
@@ -181,29 +163,51 @@ and for a global install you can get the path by issuing
 pip3 -V
 ```
 
-## Content
+## Command line switches
+
+### -h --help
+Display information on how to use the script.
+
+### -c --config
+Path to configuration file. **Default:** ./config.ini
+
+### -v --verbose
+Enable verbose output. **Default:** false
+
+### -d --debug
+Enable debug mode. **Default:** false
+
+### -s --oneshot
+Enable one-shot. Normally the script runs in an endless loop. With one shot enabled only one loop will be performed. Suitable when the script is used as a cron script. **Default:** false
+
+## config file content
 
 ### The GENERAL section
 
-#### bVerbose
+#### one_shot
+Set to true to enable one shot mode. Normally the script runs in an endless loop. With one shot enabled only one loop will be performed. Suitable when the script is used as a cron script. **Default:** false
 
-Set to 
+#### no_vscp
+If you hate VSCP this is the switch for you. the note string for each value becomes the MQTT topic and the value will be published under this topic. Not a trace from VSCP is any longer visible t the outside world. **Default:** false
 
-> bVerbose = True
+#### send_energy
+Send the energy readings. Four values for the meter readings are sent. In/out and both active and reactive energy. **Default:** true
 
-to get some info when the script is run. Set to
+#### send_active_effect = true 
+Send the active effect readings. A total of six readings are reported. In/out for each phase(L1,L2,L3). **Default:** true
 
-> bVerbose = False
+#### send_reactive_effect = true
+Send the reactive effect readings. A total of six readings are reported. In/out for each phase(L1,L2,L3). **Default:** true
 
-to make the script silent.
+#### send_voltage = true
+Send the voltage readings. 
+One reading for all phases (L1,L2,L3) is sent.
+**Default:** true
 
-#### bUseSPI
-
-Set 
-
-> bUseSPI = True 
-
-to use SPI communication to connect the sensor instead of I2C
+#### send_current = true
+Send the current readings. 
+One reading for all phases (L1,L2,L3) is sent.
+**Default:** true 
 
 ### The [VSCP] section
 
@@ -217,33 +221,38 @@ where _M5:M4:M3:M2:M1:M0_ is the MAC address and _id1:id0_ sensor id.
 
 If you don't want this you can supply your own GUID here. Note that the two lowest positions also now is used for id's so normally the GUID should have zeros in these positions.
 
-#### sensorindex_temperature
+#### Sensor indexes
 
-Sensor index for the temperature sensor. Default is that it is set to zero as the GUID is unique for each sensor. Set to a byte value of your choice if you need it.
+Normally the GUID and the id for the measurement value is used to identify the sensor. Using the sensor index is an alternative
 
-#### sensorindex_humidity
-
-Sensor index for the humidity sensor. Default is that it is set to zero as the GUID is unique for each sensor. Set to a byte value of your choice if you need it.
-
-#### sensorindex_pressure
-
-Sensor index for the pressure sensor. Default is that it is set to zero as the GUID is unique for each sensor. Set to a byte value of your choice if you need it.
-
-#### sensorindex_pressure_adj
-
-Sensor index for the adjusted sea level pressure. Default is that it is set to zero as the GUID is unique for each sensor. Set to a byte value of your choice if you need it.
-
-#### sensorindex_gas
-
-Sensor index for the gas concentration sensor. Default is that it is set to zero as the GUID is unique for each sensor. Set to a byte value of your choice if you need it.
-
-#### sensorindex_altitude
-
-Sensor index for the altitude. Default is that it is set to zero as the GUID is unique for each sensor. Set to a byte value of your choice if you need it.
-
-#### sensorindex_dewpoint
-
-Sensor index for the dew point. Default is that it is set to zero as the GUID is unique for each sensor. Set to a byte value of your choice if you need it.
+| name | default index |
+| ---- | ------------- |
+| sensorindex_sum_active_energy_out | 1 |
+| sensorindex_sum_active_energy_in | 2 |
+| sensorindex_sum_reactive_energy_out | 3 |
+| sensorindex_sum_reactive_energy_in | 4 |
+| sensorindex_momentan_active_effect_out | 5 |
+| sensorindex_momentan_active_effect_in | 6 |
+| sensorindex_momentan_reactive_effect_out | 7 |
+| sensorindex_momentan_reactive_effect_in | 8 |
+| sensorindex_momentan_active_effect_l1_out | 9 |
+| sensorindex_momentan_active_effect_l1_in | 10 |
+| sensorindex_momentan_active_effect_l2_out | 11 |
+| sensorindex_momentan_active_effect_l2_in | 12 |
+| sensorindex_momentan_active_effect_l3_out | 13 |
+| sensorindex_momentan_active_effect_l3_in | 14 |
+| sensorindex_momentan_reactive_effect_l1_out | 15 |
+| sensorindex_momentan_reactive_effect_l1_in | 16 |
+| sensorindex_momentan_reactive_effect_l2_out | 17 |
+| sensorindex_momentan_reactive_effect_l2_in | 18 |
+| sensorindex_momentan_reactive_effect_l3_out | 19 |
+| sensorindex_momentan_reactive_effect_l3_in | 20 |
+| sensorindex_voltage_l1 | 21 |
+| sensorindex_voltage_l2 | 22 |
+| sensorindex_voltage_l3 | 23 |
+| sensorindex_current_l1 | 24 |
+| sensorindex_current_l2 | 25 |
+| sensorindex_current_l3 | 26 |
 
 #### zone
 
@@ -253,33 +262,39 @@ Set the zone to a value between 0-255 if you need it. Default is zero.
 
 Set the subzone to a value between 0-255 if you need it. Default is zero.
 
-#### id_temperature
+#### Sensor id's
 
-Set id_temperature to a value between 0-65535 to set the id for the reported value. This is the two LSB bytes of the GUID used to report the sensor value. Default is 1.
+Set id to a value between 0-65535 to set the id for the reported value. This is the two LSB bytes of the GUID used to report the sensor value.
 
-#### id_humidity
+| name | default id |
+| ---- | ---------- |
+| id_sum_active_energy_out | 1 |
+| id_sum_active_energy_in | 2 |
+| id_sum_reactive_energy_out | 3 |
+| id_sum_reactive_energy_in | 4 |
+| id_momentan_active_effect_out | 5 |
+| id_momentan_active_effect_in | 6 |
+| id_momentan_reactive_effect_out | 7 |
+| id_momentan_reactive_effect_in | 8 |
+| id_momentan_active_effect_l1_out | 9 |
+| id_momentan_active_effect_l1_in | 10 |
+| id_momentan_active_effect_l2_out | 11 |
+| id_momentan_active_effect_l2_in | 12 |
+| id_momentan_active_effect_l3_out | 13 |
+| id_momentan_active_effect_l3_in | 14 |
+| id_momentan_reactive_effect_l1_out | 15 |
+| id_momentan_reactive_effect_l1_in | 16 |
+| id_momentan_reactive_effect_l2_out | 17 |
+| id_momentan_reactive_effect_l2_in | 18 |
+| id_momentan_reactive_effect_l3_out | 19 |
+| id_momentan_reactive_effect_l3_in | 20 |
+| id_voltage_l1 | 21 |
+| id_voltage_l2 | 22 |
+| id_voltage_l3 | 23 |
+| id_current_l1 | 24 |
+| id_current_l2 | 25 |
+| id_current_l3 | 26 |
 
-Set id_temperature to a value between 0-65535 to set the id for the reported value. This is the two LSB bytes of the GUID used to report the sensor value. Default is 2.
-
-#### id_pressure
-
-Set id_temperature to a value between 0-65535 to set the id for the reported value. This is the two LSB bytes of the GUID used to report the sensor value. Default is 3.
-
-#### id_pressure_adj
-
-Set id_temperature to a value between 0-65535 to set the id for the reported value. This is the two LSB bytes of the GUID used to report the sensor value. Default is 4.
-
-#### id_gas
-
-Set id_temperature to a value between 0-65535 to set the id for the reported value. This is the two LSB bytes of the GUID used to report the sensor value. Default is 5.
-
-#### id_altitude
-
-Set id_temperature to a value between 0-65535 to set the id for the reported value. This is the two LSB bytes of the GUID used to report the sensor value. Default is 6.
-
-#### id_dewpoint
-
-Set id_dewpoint to a value between 0-65535 to set the id for the reported value. This is the two LSB bytes of the GUID used to report the sensor value. Default is 6.
 
 ### The [MQTT] section
 
@@ -299,9 +314,9 @@ Username used to login to MQTT broker.
 
 Password used to login to MQTT broker.
 
-### topic_temperature
+### topic
 
-This is the topic under which the temperature event will be sent. The default is
+This is the topic under which the VSCP events will be sent. The default is
 
 > vscp/{xguid}/{xclass}/{xtype}
 
@@ -309,90 +324,53 @@ This is the topic under which the temperature event will be sent. The default is
 - _{xclass}_ will be replaced with the VSCP class of the event.
 - _{xtype}_ will be replaced with the VSCP type of the event.
 
-**->** stands for "input" and is used by VSCP when talking to a MQTT broker. **<--** is the opposite, "output". 
+### notes
+| name | default |
+| ---- | ------- |
+| note_sum_active_energy_out | Meter reading active energy out |
+| note_sum_active_energy_in | Meter reading active energy in |
+| note_sum_reactive_energy_out | Meter reading reactive energy out |
+| note_sum_reactive_energy_in | Meter reading reactive energy in |
+| note_momentan_active_effect_out | Active effect out |
+| note_momentan_active_effect_in | Active effect in |
+| note_momentan_reactive_effect_out | Reactive effect out |
+| note_momentan_reactive_effect_in | Reactive effect in |
+| note_momentan_active_effect_l1_out | Active effect L1 out |
+| note_momentan_active_effect_l1_in | Active effect L1 in |
+| note_momentan_active_effect_l2_out | Active effect L2 out |
+| note_momentan_active_effect_l2_in | Active effect L2 in |
+| note_momentan_active_effect_l3_out | Active effect L3 out |
+| note_momentan_active_effect_l3_in | Active effect L3 in |
+| note_momentan_reactive_effect_l1_out | Reactive effect L1 out |
+| note_momentan_reactive_effect_l1_in | Reactive effect L1 in |
+| note_momentan_reactive_effect_l2_out | Reactive effect L2 out |
+| note_momentan_reactive_effect_l2_in | Reactive effect L2 in |
+| note_momentan_reactive_effect_l3_out | Reactive effect L3 out |
+| note_momentan_reactive_effect_l3_in | Reactive effect L3 in |
+| note_voltage_l1 | Voltage L1 |
+| note_voltage_l2 | Voltage L2 |
+| note_voltage_l3 | Voltage L3 |
+| note_current_l1 | Current L1 |
+| note_current_l2 | Current L2 |
+| note_current_l3 | Current L3 |
 
-### topic_humidity
+### Serial section
 
-This is the topic under which the humidity event will be sent. The default is
+#### serial_port
+The serial port to use. **Default:** /dev/ttyUSB1
 
-> vscp/{xguid}/{xclass}/{xtype}
+#### serial_baudrate
+The serial baudrate to use. **Default:** 115200
 
-See __topic_temperature__ for full info.
-
-And empty topic can be used if you don't want the value to be sent.
-
-### topic_pressure
-
-This is the topic under which the pressure event will be sent. The default is
-
-> vscp/{xguid}/{xclass}/{xtype}
-
-See __topic_temperature__ for full info.
-
-And empty topic can be used if you don't want the value to be sent.
-
-### topic_pressure_adj
-
-This is the topic under which the sea level adjusted pressure event will be sent. The default is
-
-> vscp/{xguid}/{xclass}/{xtype}
-
-See __topic_temperature__ for full info.
-
-And empty topic can be used if you don't want the value to be sent.
-
-### topic_gas
-
-This is the topic under which the gas concentration event will be sent. The default is
-
-> vscp/{xguid}/{xclass}/{xtype}
-
-See __topic_temperature__ for full info.
-
-And empty topic can be used if you don't want the value to be sent.
-
-### topic_altitude
-
-This is the topic under which the altitude event will be sent. The default is
-
-> vscp/{xguid}/{xclass}/{xtype}
-
-See __topic_temperature__ for full info.
-
-And empty topic can be used if you don't want the value to be sent.
-
-### topic_dewpoint
-
-This is the topic under which the dew point event will be sent. The default is
-
-> vscp/{xguid}/{xclass}/{xtype}
-
-See __topic_temperature__ for full info.
-
-And empty topic can be used if you don't want the value to be sent.
-
-
-### The [BME680] section
-
-### sea_level_pressure 
-
-Pressure in hPa at sea level. Used for pressure adjustment. Default is 1013.25
-
-### temp_corr
-
-Correction value in degrees Celsius for sensor temperature reading. The value entered here will be subtracted from the reading. Default is 0. 
-
-
-### height_at_location
-
-Set the height in meters for your location. Used for pressure adjustments. Default is 412.0 meters.
+#### serial_timeout
+This is the timeout for reading a line of data. Should normally be greater than 10 which is the number of seconds the meter sends data. **Default:** 20  
 
 ## using
 
 After you have installed the module and created a configuration file test the script with
 
 ```bash
-mqtt-bme680.py -v -c path-to-config
+mqtt-p1-power-meter.py -v -c path-to-config
 ```
 
 the MQTT broker you have defined should receive the events under the defined topics like this
@@ -401,22 +379,9 @@ the MQTT broker you have defined should receive the events under the defined top
 
 and you will get some verbose info on the screen like this
 
-```bash
-Connection in progress... 192.168.1.7
--------------------------------------------------------------------------------
-Sending...
-Temperature: -3.9 C
-Humidity: 97.5 %
-Pressure: 96604 Pa
-Relative pressure: 101568 Pa
-Gas: 5014 Ohm
-Altitude 401 meter
-Dew point -1.9 C
--------------------------------------------------------------------------------
-Closed
-```
+![](./images/verbose_output.png)
 
-now you can add the script to cron to get measurement events send to your broker on even intervals.
+now you can add the script to cron to get measurement events sent to your broker on even intervals.
 
 ## node-red and node.js
 

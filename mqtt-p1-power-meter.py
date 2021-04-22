@@ -90,7 +90,7 @@ topic="vscp/{xguid}/{xclass}/{xtype}"
 
 
 # Configuration will be read from path set here
-cfgpath=""           
+cfgpath="./config.ini"           
 
 # ----------------------------------------------------------------------------
 # Read command line switches
