@@ -121,8 +121,12 @@ for opt, arg in opts:
 # ----------------------------------------------------------------------------
 # Read configuration from file
 # ----------------------------------------------------------------------------
-if (len(cfgpath)):
 
+if ("" != cfgpath):
+
+    if (bVerbose):
+        print("Reading configuration from",cfgpath)
+        
     init = config.read(cfgpath)
 
     # ----------------- GENERAL -----------------
@@ -679,7 +683,7 @@ if (len(cfgpath)):
             print("note_current_l3 =", note_current_l3)  
 
 # ----------------------------------------------------------------------------
-#    Connect to MQTT broker
+#                      Connect to MQTT broker
 # ----------------------------------------------------------------------------
 
 # define message callback
@@ -701,11 +705,34 @@ client.on_message=on_message
 client.username_pw_set(user, password)
 
 if bVerbose :
-    print("Connection in progress...", host)
+    print("MQTT connection in progress...", host, port)
 
-client.connect(host,port)    
+try:
+    client.connect(host,port)
+except Exception as err:
+    exception_type = type(err).__name__
+    print("Failed to connect to MQTT broker", host, port, exception_type)    
+
+if bVerbose :
+    print("Connected to MQTT broker", host, port)
 
 client.loop_start()     # start loop to process received messages
+
+# ----------------------------------------------------------------------------
+#                        Connect to serial port
+# ----------------------------------------------------------------------------
+
+# Connect to serial device
+sio = serial.Serial(
+    port=serial_port,\
+    baudrate=serial_baudrate,\
+    parity=serial.PARITY_NONE,\
+    stopbits=serial.STOPBITS_ONE,\
+    bytesize=serial.EIGHTBITS,\
+    timeout=serial_timeout)
+
+if bVerbose :
+    print("Serial interface connected to: " + sio.portstr)
 
 # Initialize VSCP event content
 def initEvent(ex, id, vscpClass, vscpType):
@@ -777,22 +804,6 @@ def sendMeasurementEvent(line, type, unit=0, id=0, sensorindex=0, note="", zone=
         ptopic = topic.format( xguid=g.getAsString(), xclass=ex.vscpclass, xtype=ex.vscptype)
         if ( len(ptopic) ):
             client.publish(ptopic, json.dumps(j))
-
-# ----------------------------------------------------------------------------
-#    Connect to serial port
-# ----------------------------------------------------------------------------
-
-# Connect to serial device
-sio = serial.Serial(
-    port=serial_port,\
-    baudrate=serial_baudrate,\
-    parity=serial.PARITY_NONE,\
-    stopbits=serial.STOPBITS_ONE,\
-    bytesize=serial.EIGHTBITS,\
-    timeout=serial_timeout)
-
-if bVerbose :
-    print("connected to: " + sio.portstr)
 
 # ----------------------------------------------------------------------------
 #                                   Work loop
