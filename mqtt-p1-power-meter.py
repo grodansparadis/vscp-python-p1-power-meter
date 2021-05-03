@@ -886,9 +886,9 @@ while True:
                 sendMeasurementEvent(line, 
                                         vt.VSCP_TYPE_MEASUREMENT_REACTIVE_POWER,
                                         0, # kVAr
-                                        id_momentan_active_effect_out, 
-                                        sensorindex_momentan_active_effect_out, 
-                                        note_momentan_active_effect_out, 
+                                        id_momentan_active_effect_in, 
+                                        sensorindex_momentan_active_effect_in, 
+                                        note_momentan_active_effect_in, 
                                         zone, 
                                         subzone)                                 
         elif(-1 != line.find("1-0:3.7.0")):
