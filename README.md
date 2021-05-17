@@ -18,6 +18,7 @@ It will deliver VSCP events for
 
 Typically the scripts is used in a [cron job](https://ostechnix.com/a-beginners-guide-to-cron-jobs/) to deliver the events on timed intervals or is run in and endless loop.
 
+A web post is available (here)[https://grodansparadis.com/wordpress/?p=5039] and (here in Swedish)[https://www.akehedman.se/wordpress/wp-admin/post.php?post=38542&action=edit]
 
 ## Install
 
@@ -104,8 +105,6 @@ pip3 install configparser
 pip3 install pyvscp
 pip3 install pyvscphelper
 ```
-
-If you need them on more places either go for a global install or use a virtual environment and install all the modules in it.
 
 #### Install MQTT module
 
