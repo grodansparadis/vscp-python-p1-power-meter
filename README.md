@@ -28,13 +28,9 @@ The code here is dependent on the [VSCP helper library](https://github.com/groda
 For convenience this is how the current version is installed on a Raaspberry Pi
 
 ```bash
+sudo apt install libexpat-dev
 wget https://github.com/grodansparadis/vscp-helper-lib/releases/download/v14.0.2/libvscphelper14_14.0.2-1_armhf.deb
-
-wget https://github.com/grodansparadis/vscp-helper-lib/releases/download/v14.0.2/libvscphelper14-dev_14.0.2-1_armhf.deb
-
-sudo dpkg -i ./libvscphelper14_14.0.2-1_armhf.deb
 sudo dpkg -i ./libvscphelper14-dev_14.0.2-1_armhf.deb
-
 ```
 
 Note that there may be [later versions available)(https://github.com/grodansparadis/vscp-helper-lib/releases) then the one downloaded above. You should **always** install the latest version.
@@ -47,13 +43,13 @@ The scripts are available as a package **vscp-python-p1-power-meter** on [PyPi](
 The installation process is easy
 
 ```bash
-pip3 install vscp-python-p1-power-meter
+pip3 install pyvscp-p1-power-meter
 ```
 
 To later upgrade to the latest version use
 
 ```bash
-pip3 install --upgrade vscp-python-p1-power-meter
+pip3 install --upgrade pyvscp-p1-power-meter
 ```
 
 It is not required but recommended to install in a virtual environment To install in a virtual environment in your current project:

@@ -879,7 +879,8 @@ while True:
                                         sensorindex_momentan_active_effect_out, 
                                         note_momentan_active_effect_out, 
                                         zone, 
-                                        subzone)                                 
+                                        subzone)  
+                                                                       
         elif(-1 != line.find("1-0:2.7.0")):
             # Active effect in
             if (send_active_effect):
@@ -890,7 +891,8 @@ while True:
                                         sensorindex_momentan_active_effect_in, 
                                         note_momentan_active_effect_in, 
                                         zone, 
-                                        subzone)                                 
+                                        subzone)  
+
         elif(-1 != line.find("1-0:3.7.0")):
             # Reactive effect out
             if (send_reactive_effect):
